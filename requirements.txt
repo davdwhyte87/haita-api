@@ -1,0 +1,12 @@
+wtforms_components
+flask-sqlalchemy
+psycopg2
+flask-wtf
+flask-login
+flask-migrate
+flask-script
+flask-inputs
+flask-marshmallow
+marshmallow-sqlalchemy
+flask-cors
+jsonschema

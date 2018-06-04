@@ -1,0 +1,16 @@
+{% extends'base.html'%}
+{% from 'macros.html' import render_field%}
+{%block body%}
+<div class="row">
+    <div class="col-md-8 col-md-offset-2 well">
+        <form class="form" method="post" action="{{url_for('user.register'}}">
+        <dl>
+            {{render_field(form.name,class="form-control")}}
+            {{render_field(form.email,class="form-control")}}
+            {{render_field(form.phone,class="form-control")}}
+            {{render_field(form.password,class="form-control")}}
+        </dl>
+        </form>
+    </div>
+</div>
+{%endblock%}

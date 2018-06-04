@@ -1,0 +1,1 @@
+from blueprints.post.post import post
