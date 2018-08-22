@@ -1,0 +1,76 @@
+API Functionalties
+-------------------
+
+User Module
+------------
+
+-/register [POST. name,email,phone,password]
+This stores user data into the database and sends a code through mail to the user
+
+-/confirm/:code [GET. ]
+This confirms the user that owns the code
+
+-/login [POST. email,password]
+This validates a user and creates a token linked to the user and sets the user id in session with the
+login utility and returns the token
+
+-/forgotpass [POST. email]
+a code will be sent to users email
+
+-/forgotpass/changepass [POST. password,code]
+password is changed  for the user that owns code
+
+**Protected routes**
+-/user/:id/update [POST name,phone,image,bio]
+Updates user data
+returns user
+
+
+
+POST MODULE
+------------
+** Protected routes**
+-/post [POST title,content,image]
+This creates a post and returns details of it
+
+-/post/:id [GET]
+Gets a post with the $id
+
+-/post/:id/delete
+checks if the user in session is the owner of the post if so, delete post
+
+-post/id/comment [POST. text]
+This creates a comment for a post
+
+
+
+Admin Module
+-------------
+-/admin/login [POST. email,password]
+This validates the admin
+**protected**
+
+-/admin/create [POST. email,password]
+this creates a new admin
+
+-admin/posts {GET ]
+This returns every post
+
+-admin/posts/user/:id [GET]
+This gets all the posts belonging to a user with id
+
+-admin/post/:id/delete {GET]
+this deletes a post
+
+-admin/user/:id/disable [GET]
+
+This changes the confirmed of a user to 0
+
+-admin/user:id/delete [GET]
+This deletes a user from platform
+
+
+
+
+
+

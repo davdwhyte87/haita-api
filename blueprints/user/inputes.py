@@ -9,8 +9,7 @@ class RegisterInput(Inputs):
       'name':[DataRequired("name field is required")],
       'email':[DataRequired("Email field is required")],
       'phone':[DataRequired("phone field is required")],
-      'password':[DataRequired("Password is required")],
-      'role':[DataRequired("The user type is required")]
+      'password':[DataRequired("Password is required")]
   }
 
 class LoginInput(Inputs):

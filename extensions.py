@@ -5,6 +5,7 @@ from flask_script import Manager
 from flask_marshmallow import Marshmallow
 from flask_cors import CORS
 
+
 login_manager=LoginManager()
 db=SQLAlchemy()
 migrate=Migrate()

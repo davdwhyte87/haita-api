@@ -1,19 +1,14 @@
 from  extensions import db
-from flask import session
+import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-class User(UserMixin,db.Model):
+class Admin(db.Model):
     id=db.Column(db.Integer,index=True,primary_key=True,autoincrement=True)
-    name=db.Column(db.String(100))
-    email=db.Column(db.String(100),unique=True)
-    phone=db.Column(db.String,unique=True,nullable=True)
-    password=db.Column(db.String,unique=True)
-    image=db.Column(db.String,unique=True,nullable=True)
-    bio=db.Column(db.String)
-    code=db.Column(db.Integer,unique=True,nullable=False)
-    confirmed=db.Column(db.Integer,default=0)
-
+    name=db.Column(db.String,nullable=False)
+    email=db.Column(db.String(100),nullable=False,unique=True)
+    password=db.Column(db.String,nullable=False,unique=True)
+    created_at=db.Column(db.DateTime,default=datetime.datetime.now())
 
     def save(self):
         db.create_all()
@@ -36,9 +31,11 @@ class User(UserMixin,db.Model):
     def update(self):
         db.session.commit()
 
-class Token(db.Model):
+
+
+class AdminToken(db.Model):
     id=db.Column(db.Integer,index=True,primary_key=True,autoincrement=True)
-    user_id=db.Column(db.Integer,db.ForeignKey('user.id'),nullable=False)
+    admin_id=db.Column(db.Integer,db.ForeignKey('admin.id'),nullable=False)
     api_token=db.Column(db.Text,nullable=True)
     created_at=db.Column(db.DateTime)
     expires_at=db.Column(db.DateTime)
@@ -61,4 +58,3 @@ class Token(db.Model):
     def delete(self):
         db.session.delete(self)
         db.session.commit()
-

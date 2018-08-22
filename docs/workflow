@@ -1,0 +1,21 @@
+Haita api workflow
+--------------------
+
+
+User registers
+user gets a code in mail
+user validates account
+user logs in
+user views all posts (random )
+user views a sigle post
+user comments
+another user views comment
+user creates a  post
+other users view
+user edits account
+user changes password
+user logs out
+user forgets password
+user gets a mail with code
+user changes passowrd
+user logs in and views posts

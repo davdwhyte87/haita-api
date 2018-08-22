@@ -17,10 +17,9 @@ title
 text
 image
 """
-@post.route('/post/create',methods=('GET','POST'))
+@post.route('/post',methods=('GET','POST'))
 @login_required
 def create():
-
     if request.method=="POST":
         inputes=CreateInput(request)
         if inputes.validate():
@@ -40,12 +39,12 @@ def create():
 def allowed_file(filename):
     return'.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
 
-@post.route('/post/all')
-def read():
+@post.route('/post/<id>')
+def get_post(id):
     from blueprints.model_schema import PostSchema
-    posts=Post.query.all()
-    post_schema=PostSchema(many=True)
-    output=post_schema.dump(posts).data
+    post=Post.query.filter_by(id=id).first()
+    post_schema=PostSchema()
+    output=post_schema.dump(post).data
     return jsonify(output)
 
 @post.route('/hello')
@@ -65,22 +64,28 @@ def update(id):
 def image(name):
     return send_file('image\\post\\'+name)
 
-@post.route('/post/delete/<id>',methods=('GET','DELETE'))
+
+@post.route('/post/<id>/delete',methods=('GET','DELETE'))
+@login_required
 def delete(id):
     post=Post.query.get(id)
-    post.delete()
-    return jsonify(status=200,code=1)
+    if session['user_id']==post.user_id:
+        post.delete()
+        return jsonify(code=1)
+    else:
+        return jsonify(code=0,message="And error occurred, unauthorized action")
+
 
 #this takes in [ text]
 #this function creates a comment for a post
-@post.route('/post/comment/<id>',methods=('GET','POST'))
+@post.route('/post/<id>/comment',methods=('GET','POST'))
 @login_required
 @cross_origin()
 def comment(id):
     from blueprints.model_schema import PostSchema, CommentSchema
     if request.method=="POST":
         print(request.is_json)
-        content = request.get_json()
+        content = request.json
         print(content)
         inputes = CommentCreate(request)
         if inputes.validate():
@@ -91,7 +96,7 @@ def comment(id):
             comment.save()
             comment_schema = CommentSchema()
             output = comment_schema.dump(comment).data
-            return jsonify(output)
+            return jsonify(data=output,code=1)
         else:
             return jsonify(code=0,errors=inputes.errors)
 

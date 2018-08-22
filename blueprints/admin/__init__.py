@@ -1,0 +1,1 @@
+from blueprints.admin.admin import admin
