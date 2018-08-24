@@ -15,6 +15,7 @@ class User(UserMixin,db.Model):
     confirmed=db.Column(db.Integer,default=0)
 
 
+
     def save(self):
         db.create_all()
         db.session.add(self)
