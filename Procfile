@@ -1,1 +1,4 @@
-web: gunicorn --bind 0.0.0.0:$PORT wsgi:app --log-file -
+web: gunicorn -w 4 wsgi:app
+python: python mig.py db init
+python: python mig.py db migrate
+python python mig.py db upgrade
