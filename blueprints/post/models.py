@@ -12,12 +12,20 @@ class Post(db.Model):
     comment=db.relationship('Comment',lazy=True,backref='post',uselist=True)
     created_at=db.Column(db.DateTime,default=datetime.datetime.now())
     _ulikes=db.Column(db.String,default="0;1;1;3;4;9;0;3;9;9")
-    ulikes=[int(x) for x in _ulikes.split(';')]
+    ulikes=[]
 
     def save(self):
         db.create_all()
         db.session.add(self)
         db.session.commit()
+
+    def get_likes(self):
+        self.ulikes=[int(x) for x in self._ulikes.split(';')]
+
+    def __init__(self):
+        self._ulikes="0;1;1;3;4;9;0;3;9;9"
+        self.get_likes()
+        return
 
     def update(self):
         db.session.commit()
