@@ -11,12 +11,21 @@ def email_exists(form,field):
     admin=User.query.filter_by(email=field.data).first()
     if admin:
         raise ValidationError("Email already exists")
+
+def uname_exists(form,field):
+    from blueprints.user.user import User
+    print(type(field))
+    admin=User.query.filter_by(uname=field.data).first()
+    if admin:
+        raise ValidationError("The username has been taken")
+
 class RegisterInput(Inputs):
   json={
       'name':[DataRequired("name field is required")],
       'email':[DataRequired("Email field is required"),email_exists],
       'phone':[DataRequired("phone field is required")],
-      'password':[DataRequired("Password is required")]
+      'password':[DataRequired("Password is required")],
+      'uname':[DataRequired("A username is required")]
   }
 
 class LoginInput(Inputs):
@@ -28,6 +37,4 @@ class LoginInput(Inputs):
 class UpdateForm(Inputs):
     json = {
         'name': [DataRequired("name field is required")],
-        'email': [DataRequired("Email field is required")],
-        'phone': [DataRequired("phone field is required")]
     }

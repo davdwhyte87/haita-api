@@ -7,6 +7,8 @@ from flask import jsonify
 from blueprints.utils import upload_file_encoded
 import os
 from random import randint
+from flask_cors import cross_origin
+
 
 user=Blueprint('user',__name__,template_folder='templates')
 
@@ -21,6 +23,7 @@ name
 email
 phone
 password
+username
 """
 @user.route('/register',methods=('GET','POST'))
 def register():
@@ -33,6 +36,7 @@ def register():
             user.name =  data['name']
             user.email = data['email']
             user.phone = data['phone']
+            user.uname=data['uname']
             user.code = randint(0, 90000)
             user.save()
             return jsonify(code=1,message="User created Successfully")
@@ -48,7 +52,7 @@ def confirm(code):
         user.save()
         return jsonify(code=1,message="Confirmed")
     else:
-        return jsonify(code=0,message="An error occurred")
+        return jsonify(code=0,message="An error occurred, This code doesn't belong to any user")
 
 @user.route('/forgotpass',methods=('GET','POST'))
 def forgotpass():
@@ -71,7 +75,6 @@ def forgotpass_changepass():
     password=data['password']
     code=data['code']
     user = User.query.filter_by(code=code).first()
-
     if user:
         user.encrypt_password(data['password'])
         user.save()
@@ -81,13 +84,14 @@ def forgotpass_changepass():
         session['user_id']=""
         return jsonify(code=1,message="password changed successfully")
     else:
-        return jsonify(code=0,message="An error occurred")
+        return jsonify(code=0,message="An error occurred, this code does not belong to a user")
 
 # takes in name,phone,bio, maybe an encoded image
-@user.route('/user/<id>/update',methods=('GET','POST'))
+@user.route('/user/<id>/update',methods=('GET','PUT'))
 @login_required
 def update(id):
-    if request.method=="POST":
+    if request.method=="PUT":
+        print(request.json)
         user = User.query.filter_by(id=id).first()
         inputes=UpdateForm(request)
         if not user:
@@ -95,16 +99,20 @@ def update(id):
         if inputes.validate():
             data=request.json
             user.name = data['name']
-            user.phone = data['phone']
-            user.bio=data['bio']
-            if data['image']:
+            if "phone" in data:
+                user.phone = data['phone']
+            if "bio" in data:
+                user.bio=data['bio']
+            if "uname" in data:
+                user.uname=data['uname']
+            if "image" in data:
                 fname=upload_file_encoded(data['image'],'user')
                 user.image=fname
             user.save()
             return jsonify(code=1,message="Updated successfully")
         else:
             return jsonify(code=0, message="An error occured", errors=inputes.errors )
-    return jsonify(code=0, message="An error occurred" )
+    return jsonify(code=0, message="An error occurred")
 
 """"
 In to use the register route, you need:
@@ -128,13 +136,13 @@ def login():
                     tk.set_dates()
                     tk.user_id = user.id
                     tk.save()
-                    return jsonify(code=1,token=tk.api_token)
+                    return jsonify(code=1,token=tk.api_token,message="You are now logged in",user_id=user.id)
                 else:
                     return jsonify(code=0,message="Password or email is wrong")
             else:
                 return jsonify(code=0,message="This user does not exist")
         else:
-            return jsonify(code=0,success=False, errors=form.errors)
+            return jsonify(code=0,message="An error occurred", errors=form.errors)
 
 @user.route('/image/user/<name>')
 def image(name):
@@ -158,7 +166,7 @@ def getUser():
     if user:
         user_schema=UserSchema()
         output=user_schema.dump(user).data
-        return jsonify(code=1,user=output)
+        return jsonify(code=1,data=output)
     return jsonify(code=0,message="This user does not exist")
 
 @user.route('/')

@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 class User(UserMixin,db.Model):
     id=db.Column(db.Integer,index=True,primary_key=True,autoincrement=True)
     name=db.Column(db.String(100))
+    uname=db.Column(db.String(100))
     email=db.Column(db.String(100),unique=True)
     phone=db.Column(db.String,unique=True,nullable=True)
     password=db.Column(db.String,unique=True)

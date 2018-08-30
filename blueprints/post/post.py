@@ -1,11 +1,12 @@
 from flask import Blueprint, request, session, current_app,send_file
 from blueprints.post.inputes import CreateInput,CommentCreate
 from login_required import login_required
-from blueprints.post.models import Post,Comment
+from blueprints.post.models import Post,Comment,Like
 from flask import jsonify
 from blueprints.utils import upload_file_encoded
 import os
 from flask_cors import cross_origin
+
 
 post=Blueprint('post',__name__,template_folder=None)
 ALLOWED_EXTENSIONS=(['png','jpg','jpeg','gif'])
@@ -39,6 +40,15 @@ def create():
 def allowed_file(filename):
     return'.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
 
+@post.route('/posts')
+# @login_required
+def get_posts():
+    from blueprints.model_schema import PostSchema
+    posts = Post.query.all()
+    post_schema = PostSchema(many=True)
+    output = post_schema.dump(posts).data
+    return jsonify(code=1, data=output)
+
 @post.route('/post/<id>')
 def get_post(id):
     from blueprints.model_schema import PostSchema
@@ -59,6 +69,9 @@ def update(id):
     post_schema = PostSchema()
     output = post_schema.dump(post).data
     return jsonify(post=output)
+
+
+
 
 @post.route('/image/post/<name>')
 def image(name):
@@ -107,3 +120,18 @@ def all_comment():
     comment_schema = CommentSchema(many=True)
     output = comment_schema.dump(commets).data
     return jsonify(output)
+
+@post.route('/post/<id>/like')
+@login_required
+def like(id):
+    uid=request.headers.get('UID')
+    print(uid)
+    #check if the current user has liked the post
+    likex=Like.query.filter_by(post_id=id).filter_by(user_id=uid).first()
+    if not likex:
+        like=Like()
+        like.post_id=id
+        like.user_id=uid
+        like.save()
+        return jsonify(code=1,message="Post Liked")
+    return jsonify(code=0,message="You unliked this post")
