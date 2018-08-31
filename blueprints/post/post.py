@@ -94,31 +94,30 @@ def delete(id):
 @post.route('/post/<id>/comment',methods=('GET','POST'))
 @login_required
 def comment(id):
+    uid=request.headers.get('UID')
     from blueprints.model_schema import PostSchema, CommentSchema
     if request.method=="POST":
-        print(request.is_json)
         content = request.json
-        print(content)
         inputes = CommentCreate(request)
         if inputes.validate():
             comment=Comment()
-            comment.user_id=session['user_id']
+            comment.user_id=uid 
             comment.text=content['text']
             comment.post_id=id
             comment.save()
             comment_schema = CommentSchema()
             output = comment_schema.dump(comment).data
-            return jsonify(data=output,code=1)
+            return jsonify(code=1,data=output, message="Comment created successfully")
         else:
             return jsonify(code=0,errors=inputes.errors)
 
 @post.route('/post/<id>/comments')
 def all_comment(id):
     from blueprints.model_schema import PostSchema, CommentSchema
-    commets= Comment.query.filter_by(post_id=id).all()
+    commets= Comment.query.filter_by(post_id=id).order_by("id desc").all()
     comment_schema = CommentSchema(many=True)
     output = comment_schema.dump(commets).data
-    return jsonify(data=output)
+    return jsonify(code=1,data=output)
 
 @post.route('/post/<id>/like')
 @login_required
@@ -133,4 +132,6 @@ def like(id):
         like.user_id=uid
         like.save()
         return jsonify(code=1,message="Post Liked")
-    return jsonify(code=0,message="You unliked this post")
+    else:
+       likex.delete() 
+       return jsonify(code=0,message="You unliked this post")

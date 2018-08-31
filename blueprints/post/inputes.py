@@ -9,6 +9,7 @@ class CreateInput(Inputs):
   json={
       'title':[DataRequired("name field is required")],
       'text':[DataRequired("Email field is required")],
+      'image':[DataRequired("An image is required")]
   }
 
 schemaF = {
