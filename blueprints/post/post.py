@@ -93,7 +93,6 @@ def delete(id):
 #this function creates a comment for a post
 @post.route('/post/<id>/comment',methods=('GET','POST'))
 @login_required
-@cross_origin()
 def comment(id):
     from blueprints.model_schema import PostSchema, CommentSchema
     if request.method=="POST":
@@ -113,13 +112,13 @@ def comment(id):
         else:
             return jsonify(code=0,errors=inputes.errors)
 
-@post.route('/comments')
-def all_comment():
+@post.route('/post/<id>/comments')
+def all_comment(id):
     from blueprints.model_schema import PostSchema, CommentSchema
-    commets= Comment.query.all()
+    commets= Comment.query.filter_by(post_id=id).all()
     comment_schema = CommentSchema(many=True)
     output = comment_schema.dump(commets).data
-    return jsonify(output)
+    return jsonify(data=output)
 
 @post.route('/post/<id>/like')
 @login_required

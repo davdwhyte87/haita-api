@@ -16,6 +16,7 @@ class CommentSchema(ma.ModelSchema):
 class LikeSchema(ma.ModelSchema):
     class Meta:
         model=Like
+        field='user_id'
         sqla_session = db.session
 class PostSchema(ma.ModelSchema):
     class Meta:
