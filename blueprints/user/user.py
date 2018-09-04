@@ -133,6 +133,8 @@ def login():
             email = data['email']
             user=User.query.filter_by(email=email).first()
             if user:
+                if user.confirmed == 0:
+                    return jsonify(code=0, message="You need to confirm your account. Please check your mail")
                 if user.authenticate(user.password, data['password']):
                     import os
                     tk = Token()
