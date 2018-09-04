@@ -41,7 +41,7 @@ def register():
             user.code = randint(0, 90000)
             user.save()
             msg = Message("Hello",
-                          sender=("Me", "me@example.com"),recipients=["kingstonwhyte87@gmail.com"])
+                          sender=("Me", "haitateam100@gmail.com"),recipients=[user.email])
             msg.html = render_template("mail.html",code=user.code)
             mail.send(msg)
             return jsonify(code=1,message="User created Successfully")
@@ -70,7 +70,7 @@ def forgotpass():
         user.save()
         #send code to mail
         msg = Message("Hello",
-                      sender=("Me", "me@example.com"), recipients=["kingstonwhyte87@gmail.com"])
+                      sender=("Haita", "haitateam100@gmail.com"), recipients=[email])
         msg.html = render_template("mail.html", code=user.code)
         mail.send(msg)
         return jsonify(code=1,message="Code sent to mail")
