@@ -41,7 +41,7 @@ def register():
             user.code = randint(0, 90000)
             user.save()
             msg = Message("Hello",
-                          sender=("Me", "haitateam100@gmail.com"),recipients=[user.email])
+                          sender=("Haita", "haitateam100@gmail.com"),recipients=[user.email])
             msg.html = render_template("mail.html",code=user.code)
             mail.send(msg)
             return jsonify(code=1,message="User created Successfully")
