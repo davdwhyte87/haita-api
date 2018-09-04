@@ -11,3 +11,4 @@ marshmallow-sqlalchemy
 flask-cors
 jsonschema
 gunicorn
+flask-mail

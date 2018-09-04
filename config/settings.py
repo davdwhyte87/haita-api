@@ -12,3 +12,9 @@ ALLOWED_EXTENSIONS=(['png','jpg','jpeg','gif'])
 ADMIN_NAME="Haita app"
 ADMIN_EMAIL="haita@gmail.com"
 ADMIN_PASSWORD="quavaleement093"
+
+MAIL_SERVER = 'smtp.gmail.com'
+MAIL_PORT = 465
+MAIL_USE_SSL = True
+MAIL_USERNAME = 'haitateam100@gmail.com'
+MAIL_PASSWORD = 'haitaisdope'

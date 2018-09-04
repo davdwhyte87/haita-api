@@ -2,7 +2,7 @@ from flask import Flask
 import seeder
 from extensions import login_manager
 from extensions import db,migrate
-from extensions import ma,cors
+from extensions import ma,cors,mail
 
 #blueprints
 
@@ -26,7 +26,7 @@ db.init_app(app)
 login_manager.init_app(app)
 ma.init_app(app)
 cors.init_app(app)
-
+mail.init_app(app)
 #initial app function checks
 
 

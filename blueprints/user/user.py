@@ -1,4 +1,4 @@
-from flask import Blueprint, request, make_response,current_app,send_file,session
+from flask import Blueprint, request, make_response,current_app,send_file,session,render_template
 from login_required import login_required
 from blueprints.user.inputes import RegisterInput,LoginInput,UpdateForm,ChangePass
 from blueprints.user.models import User,Token
@@ -8,7 +8,8 @@ from blueprints.utils import upload_file_encoded
 import os
 from random import randint
 from flask_cors import cross_origin
-
+from flask_mail import Message
+from extensions import mail
 
 user=Blueprint('user',__name__,template_folder='templates')
 
@@ -39,6 +40,10 @@ def register():
             user.uname=data['uname']
             user.code = randint(0, 90000)
             user.save()
+            msg = Message("Hello",
+                          sender=("Me", "me@example.com"),recipients=["kingstonwhyte87@gmail.com"])
+            msg.html = render_template("mail.html",code=user.code)
+            mail.send(msg)
             return jsonify(code=1,message="User created Successfully")
         else:
             return jsonify(code=0, errors=inputs.errors,message="An error occured")
@@ -64,6 +69,10 @@ def forgotpass():
         user.code=code
         user.save()
         #send code to mail
+        msg = Message("Hello",
+                      sender=("Me", "me@example.com"), recipients=["kingstonwhyte87@gmail.com"])
+        msg.html = render_template("mail.html", code=user.code)
+        mail.send(msg)
         return jsonify(code=1,message="Code sent to mail")
     else:
         return jsonify(code=0,message="An error occurred. email does not belong to a user")
