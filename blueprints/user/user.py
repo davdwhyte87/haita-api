@@ -1,6 +1,6 @@
 from flask import Blueprint, request, make_response,current_app,send_file,session
 from login_required import login_required
-from blueprints.user.inputes import RegisterInput,LoginInput,UpdateForm
+from blueprints.user.inputes import RegisterInput,LoginInput,UpdateForm,ChangePass
 from blueprints.user.models import User,Token
 from blueprints.model_schema import UserSchema
 from flask import jsonify
@@ -71,20 +71,24 @@ def forgotpass():
 
 @user.route('/forgotpass/changepass',methods=('GET','POST'))
 def forgotpass_changepass():
-    data=request.json
-    password=data['password']
-    code=data['code']
-    user = User.query.filter_by(code=code).first()
-    if user:
-        user.encrypt_password(data['password'])
-        user.save()
-        api_token = Token.query.filter_by(user_id=user.id).first()
-        if api_token:
-            api_token.delete()
-        session['user_id']=""
-        return jsonify(code=1,message="password changed successfully")
-    else:
-        return jsonify(code=0,message="An error occurred, this code does not belong to a user")
+    if request.method=="POST":
+        changepassInputes=ChangePass(request)
+        if changepassInputes.validate():
+            data=request.json
+            code=data['code']
+            user = User.query.filter_by(code=code).first()
+            if user:
+                user.encrypt_password(data['password'])
+                user.save()
+                api_token = Token.query.filter_by(user_id=user.id).first()
+                if api_token:
+                    api_token.delete()
+                session['user_id']=""
+                return jsonify(code=1,message="password changed successfully")
+            else:
+                return jsonify(code=0,message="An error occurred, this code does not belong to a user")
+        else:
+           return jsonify(code=0,errors=changepassInputes.errors ,message="An error occured")
 
 # takes in name,phone,bio, maybe an encoded image
 @user.route('/user/<id>/update',methods=('GET','PUT'))
@@ -161,7 +165,8 @@ def all():
 @user.route('/user')
 @login_required
 def getUser():
-    id=session['user_id']
+    uid = request.headers.get('UID')
+    id=uid
     user=User.query.filter_by(id=id).first()
     if user:
         user_schema=UserSchema()
@@ -172,3 +177,8 @@ def getUser():
 @user.route('/')
 def hello():
     return "hello this is the user module"
+
+@user.route('/checksignin')
+@login_required
+def checksignin():
+    return jsonify(code=1)

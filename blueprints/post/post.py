@@ -22,13 +22,14 @@ image
 @login_required
 def create():
     if request.method=="POST":
+        uid = request.headers.get('UID')
         inputes=CreateInput(request)
         if inputes.validate():
             post=Post()
             data=request.json
             post.title=data['title']
             post.text=data['text']
-            post.user_id=session['user_id']
+            post.user_id=uid
             #upload file
             fname=upload_file_encoded(data['image'],'post')
             post.image=fname
@@ -44,7 +45,7 @@ def allowed_file(filename):
 # @login_required
 def get_posts():
     from blueprints.model_schema import PostSchema
-    posts = Post.query.all()
+    posts = Post.query.order_by("id desc").all()
     post_schema = PostSchema(many=True)
     output = post_schema.dump(posts).data
     return jsonify(code=1, data=output)
@@ -55,7 +56,7 @@ def get_post(id):
     post=Post.query.filter_by(id=id).first()
     post_schema=PostSchema()
     output=post_schema.dump(post).data
-    return jsonify(output)
+    return jsonify(code=1,data=output)
 
 @post.route('/hello')
 def hello():
@@ -81,8 +82,9 @@ def image(name):
 @post.route('/post/<id>/delete',methods=('GET','DELETE'))
 @login_required
 def delete(id):
+    uid = request.headers.get('UID')
     post=Post.query.get(id)
-    if session['user_id']==post.user_id:
+    if uid==post.user_id:
         post.delete()
         return jsonify(code=1)
     else:
@@ -135,3 +137,13 @@ def like(id):
     else:
        likex.delete() 
        return jsonify(code=0,message="You unliked this post")
+
+@post.route('/my_posts')
+# @login_required
+def my_posts():
+    uid=request.headers.get('UID')
+    from blueprints.model_schema import PostSchema
+    posts = Post.query.filter_by(user_id=uid)
+    post_schema = PostSchema(many=True)
+    output = post_schema.dump(posts).data
+    return jsonify(code=1, data=output)

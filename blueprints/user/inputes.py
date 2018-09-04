@@ -38,3 +38,9 @@ class UpdateForm(Inputs):
     json = {
         'name': [DataRequired("name field is required")],
     }
+
+class ChangePass(Inputs):
+     json={
+       'password': [DataRequired("Password field is required")],
+       'code': [DataRequired("The code is required")]
+   }
