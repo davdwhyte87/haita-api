@@ -11,7 +11,7 @@ from blueprints.post import post
 from blueprints.admin import admin
 
 #app setup
-app=Flask(__name__,instance_relative_config=True)
+app=Flask(__name__,instance_relative_config=True,static_folder="/image")
 app.config.from_object('config.settings')
 app.config.from_pyfile('settings.py',silent=True)
 #blueprints
