@@ -161,7 +161,7 @@ def login():
 
 @user.route('/image/user/<name>')
 def image(name):
-    return send_file('image\\user\\'+name)
+    return send_file('image/user/'+name)
 
 
 @user.route('/user/all')
