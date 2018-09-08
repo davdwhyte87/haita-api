@@ -1,6 +1,6 @@
 wtforms_components
 flask-sqlalchemy
-psycopg2
+psycopg2-binary
 flask-wtf
 flask-login
 flask-migrate
