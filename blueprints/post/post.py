@@ -1,4 +1,4 @@
-from flask import Blueprint, request, session, current_app,send_file
+from flask import Blueprint, request, session, current_app,send_file,send_from_directory
 from blueprints.post.inputes import CreateInput,CommentCreate
 from login_required import login_required
 from blueprints.post.models import Post,Comment,Like
@@ -76,7 +76,7 @@ def update(id):
 
 @post.route('/image/post/<name>')
 def image(name):
-    return send_file('image\\post\\'+name)
+    return send_from_directory(current_app.static_folder + "\\post", name)
 
 
 @post.route('/post/<id>/delete',methods=('GET','DELETE'))

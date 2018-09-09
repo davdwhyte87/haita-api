@@ -1,4 +1,4 @@
-from flask import Blueprint, request, make_response,current_app,send_file,session,render_template
+from flask import Blueprint, request, make_response,current_app,send_file,session,render_template,send_from_directory
 from login_required import login_required
 from blueprints.user.inputes import RegisterInput,LoginInput,UpdateForm,ChangePass
 from blueprints.user.models import User,Token
@@ -161,7 +161,7 @@ def login():
 
 @user.route('/image/user/<name>')
 def image(name):
-    return send_file('image\\user\\'+name)
+    return send_from_directory(current_app.static_folder+"\\user",name)
 
 
 @user.route('/user/all')

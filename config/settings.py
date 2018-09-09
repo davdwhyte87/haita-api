@@ -15,6 +15,7 @@ ADMIN_PASSWORD="quavaleement093"
 
 MAIL_SERVER = 'smtp.gmail.com'
 MAIL_PORT = 465
-MAIL_USE_SSL = True
+MAIL_USE_SSL = False
+MAIL_USE_TLS=True
 MAIL_USERNAME = 'haitateam100@gmail.com'
 MAIL_PASSWORD = 'haitaisdope'
