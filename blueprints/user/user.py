@@ -39,11 +39,14 @@ def register():
             user.phone = data['phone']
             user.uname=data['uname']
             user.code = randint(0, 90000)
-            user.save()
             msg = Message("Hello",
                           sender=("Haita", "haitateam100@gmail.com"),recipients=[user.email])
             msg.html = render_template("mail.html",code=user.code)
-            mail.send(msg)
+            try:
+                mail.send(msg)
+            except:
+                return jsonify(code=0, errors=inputs.errors, message="An error occured")
+            user.save()
             return jsonify(code=1,message="User created Successfully")
         else:
             return jsonify(code=0, errors=inputs.errors,message="An error occured")
