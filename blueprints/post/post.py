@@ -76,7 +76,7 @@ def update(id):
 
 @post.route('/image/post/<name>')
 def image(name):
-    return send_from_directory(current_app.static_folder + "\\post", name)
+    return send_from_directory(current_app.static_folder + "/post", name)
 
 
 @post.route('/post/<id>/delete',methods=('GET','DELETE'))
