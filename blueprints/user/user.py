@@ -164,7 +164,8 @@ def login():
 
 @user.route('/image/user/<name>')
 def image(name):
-    return send_from_directory(current_app.static_folder+"\\user",name)
+    print(current_app.static_folder)
+    return send_from_directory(current_app.static_folder+"/user",name)
 
 
 @user.route('/user/all')
