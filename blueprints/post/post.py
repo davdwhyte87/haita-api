@@ -31,8 +31,8 @@ def create():
             post.text=data['text']
             post.user_id=uid
             #upload file
-            fname=upload_file_encoded(data['image'],'post')
-            post.image=fname
+            # fname=upload_file_encoded(data['image'],'post')
+            post.image=data['image']
             post.save()
             return jsonify(code=1,message="Successfully created")
         return jsonify(code=0, message="An error occurred", errors=inputes.errors)
@@ -144,6 +144,15 @@ def my_posts():
     uid=request.headers.get('UID')
     from blueprints.model_schema import PostSchema
     posts = Post.query.filter_by(user_id=uid)
+    post_schema = PostSchema(many=True)
+    output = post_schema.dump(posts).data
+    return jsonify(code=1, data=output)
+
+@post.route('/find_posts/<id>')
+@login_required
+def findPosts(id):
+    from blueprints.model_schema import PostSchema
+    posts = Post.query.filter_by(user_id=id)
     post_schema = PostSchema(many=True)
     output = post_schema.dump(posts).data
     return jsonify(code=1, data=output)

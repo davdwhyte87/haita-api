@@ -12,3 +12,4 @@ flask-cors
 jsonschema
 gunicorn
 flask-mail
+PyJWT

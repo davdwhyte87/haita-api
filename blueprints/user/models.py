@@ -10,7 +10,7 @@ class User(UserMixin,db.Model):
     email=db.Column(db.String(100),unique=True)
     phone=db.Column(db.String,nullable=True)
     password=db.Column(db.String,unique=True)
-    image=db.Column(db.String,unique=True,nullable=True)
+    image=db.Column(db.String,nullable=True)
     bio=db.Column(db.String)
     code=db.Column(db.Integer,unique=True,nullable=False)
     confirmed=db.Column(db.Integer,default=0)

@@ -10,6 +10,8 @@ from random import randint
 from flask_cors import cross_origin
 from flask_mail import Message
 from extensions import mail
+import jwt
+import datetime
 
 user=Blueprint('user',__name__,template_folder='templates')
 
@@ -122,8 +124,8 @@ def update(id):
             if "uname" in data:
                 user.uname=data['uname']
             if "image" in data:
-                fname=upload_file_encoded(data['image'],'user')
-                user.image=fname
+                # fname=upload_file_encoded(data['image'],'user')
+                user.image=data['image']
             user.save()
             return jsonify(code=1,message="Updated successfully")
         else:
@@ -148,13 +150,11 @@ def login():
                 if user.confirmed == 0:
                     return jsonify(code=0, message="You need to confirm your account. Please check your mail")
                 if user.authenticate(user.password, data['password']):
-                    import os
-                    tk = Token()
-                    tk.api_token = os.urandom(100)
-                    tk.set_dates()
-                    tk.user_id = user.id
-                    tk.save()
-                    return jsonify(code=1,token=tk.api_token,message="You are now logged in",user_id=user.id)
+                    token = jwt.encode(
+                        {'user_id': user.id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24),
+                         'user_type': 0},
+                        current_app.config['SECRET_KEY'], algorithm="HS256")
+                    return jsonify(code=1,token=token.decode('UTF-8'),message="You are now logged in",user_id=user.id)
                 else:
                     return jsonify(code=0,message="Password or email is wrong")
             else:
@@ -188,6 +188,19 @@ def getUser():
         output=user_schema.dump(user).data
         return jsonify(code=1,data=output)
     return jsonify(code=0,message="This user does not exist")
+
+@user.route('/find_user/<uname>')
+@login_required
+def findUser(uname):
+    user=User.query.filter_by(uname=uname).first()
+    if user:
+        user_schema = UserSchema()
+        output = user_schema.dump(user).data
+        return jsonify(code=1,data=output)
+    else:
+        return jsonify(code=0,message="An error occurred")
+
+
 
 @user.route('/')
 def hello():
