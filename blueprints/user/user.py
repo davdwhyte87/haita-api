@@ -9,9 +9,12 @@ import os
 from random import randint
 from flask_cors import cross_origin
 from flask_mail import Message
-from extensions import mail
+# from extensions import mail
 import jwt
 import datetime
+from extensions import send_grid
+import sendgrid
+from sendgrid.helpers.mail import *
 
 user=Blueprint('user',__name__,template_folder='templates')
 
@@ -41,13 +44,17 @@ def register():
             user.phone = data['phone']
             user.uname=data['uname']
             user.code = randint(0, 90000)
-            msg = Message("Hello",
-                          sender=("Haita", "haitateam100@gmail.com"),recipients=[user.email])
-            msg.html = render_template("mail.html",code=user.code)
-            try:
-                mail.send(msg)
-            except:
-                return jsonify(code=0, errors=inputs.errors, message="An error occured")
+
+            sg = sendgrid.SendGridAPIClient(apikey=current_app.config['SENDGRID_API_KEY'])
+            from_email = Email("haitateam@haita.com")
+            to_email = Email(user.email)
+            subject = "Haita confirm email"
+            content = Content("text/html", value=render_template("mail.html",code=user.code))
+            mail = Mail(from_email, subject, to_email, content)
+            response = sg.client.mail.send.post(request_body=mail.get())
+            print(response.status_code)
+            print(response.body)
+            print(response.headers)
             user.save()
             return jsonify(code=1,message="User created Successfully")
         else:
