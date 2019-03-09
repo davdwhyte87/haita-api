@@ -19,3 +19,6 @@ MAIL_USE_SSL = False
 MAIL_USE_TLS=True
 MAIL_USERNAME = 'haitateam100@gmail.com'
 MAIL_PASSWORD = "haitaisdope"
+
+SENDGRID_API_KEY = "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"
+SENDGRID_DEFAULT_FROM = "haitateam@haita.com"

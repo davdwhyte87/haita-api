@@ -3,7 +3,7 @@ import seeder
 from extensions import login_manager
 from extensions import db,migrate
 from extensions import ma,cors,mail
-
+from extensions import send_grid
 #blueprints
 
 from blueprints.user import user
@@ -27,6 +27,7 @@ login_manager.init_app(app)
 ma.init_app(app)
 cors.init_app(app)
 mail.init_app(app)
+send_grid.init_app(app)
 #initial app function checks
 
 

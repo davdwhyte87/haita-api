@@ -5,6 +5,7 @@ from flask_script import Manager
 from flask_marshmallow import Marshmallow
 from flask_cors import CORS
 from flask_mail import Mail
+from flask_sendgrid import SendGrid
 
 login_manager=LoginManager()
 db=SQLAlchemy()
@@ -12,3 +13,4 @@ migrate=Migrate()
 ma=Marshmallow()
 cors=CORS(resources={r"/*": {"origins": "*"}})
 mail=Mail()
+send_grid= SendGrid()
