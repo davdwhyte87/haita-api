@@ -1,24 +1,25 @@
 import  os
-DEBUG=True
-SECRET_KEY="jdksjdksjdksj"
-if os.environ.get('DATABASE_URL') is None:
-    SQLALCHEMY_DATABASE_URI="postgresql://postgres:hataguy@localhost:5432/haita"
-else:
-    SQLALCHEMY_DATABASE_URI = "postgres://clhsswfxcfughm:86a333fc3957d5c234ee6999cf71fd19a3438485a03811d1d474e01f77d78062@ec2-54-235-206-118.compute-1.amazonaws.com:5432/d3j5r4pqh8oah5"
+from dotenv import load_dotenv
+load_dotenv()
 
-UPLOAD_FOLDER="image"
-ALLOWED_EXTENSIONS=(['png','jpg','jpeg','gif'])
+DEBUG= os.getenv('DEBUG')
+SECRET_KEY= os.getenv('SECRET_KEY')
+SQLALCHEMY_DATABASE_URI= os.getenv('SQLALCHEMY_DATABASE_URI')
 
-ADMIN_NAME="Haita app"
-ADMIN_EMAIL="haita@gmail.com"
-ADMIN_PASSWORD="quavaleement093"
+UPLOAD_FOLDER= os.getenv('UPLOAD_FOLDER')
+ALLOWED_EXTENSIONS= os.getenv('ALLOWED_EXTENSIONS')
 
-MAIL_SERVER = 'smtp.gmail.com'
-MAIL_PORT = 587
-MAIL_USE_SSL = False
-MAIL_USE_TLS=True
-MAIL_USERNAME = 'haitateam100@gmail.com'
-MAIL_PASSWORD = "haitaisdope"
+ADMIN_NAME= os.getenv('ADMIN_NAME')
+ADMIN_EMAIL= os.getenv('ADMIN_EMAIL')
+ADMIN_PASSWORD= os.getenv('ADMIN_PASSWORD')
 
-SENDGRID_API_KEY = "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"
-SENDGRID_DEFAULT_FROM = "haitateam@haita.com"
+# MAIL_SERVER = 'smtp.gmail.com'
+# MAIL_PORT = 587
+# MAIL_USE_SSL = False
+# MAIL_USE_TLS=True
+# MAIL_USERNAME = 'haitateam100@gmail.com'
+# MAIL_PASSWORD = "haitaisdope"
+
+SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
+SENDGRID_DEFAULT_FROM = os.getenv('SENDGRID_DEFAULT_FROM')
+DB_URL = os.getenv('DB_URL')

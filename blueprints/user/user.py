@@ -81,10 +81,13 @@ def forgotpass():
         user.code=code
         user.save()
         #send code to mail
-        msg = Message("Hello",
-                      sender=("Haita", "haitateam100@gmail.com"), recipients=[email])
-        msg.html = render_template("mail.html", code=user.code)
-        mail.send(msg)
+        sg = sendgrid.SendGridAPIClient(apikey=current_app.config['SENDGRID_API_KEY'])
+        from_email = Email("haitateam@haita.com")
+        to_email = Email(user.email)
+        subject = "Haita forgot password"
+        content = Content("text/html", value=render_template("mail.html",code=user.code))
+        mail = Mail(from_email, subject, to_email, content)
+        response = sg.client.mail.send.post(request_body=mail.get())
         return jsonify(code=1,message="Code sent to mail")
     else:
         return jsonify(code=0,message="An error occurred. email does not belong to a user")

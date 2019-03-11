@@ -26,11 +26,11 @@ db.init_app(app)
 login_manager.init_app(app)
 ma.init_app(app)
 cors.init_app(app)
-mail.init_app(app)
 send_grid.init_app(app)
 #initial app function checks
 
 
+print(app.config['DB_URL'])
 #app run
 if __name__=='__main__':
     app.run()

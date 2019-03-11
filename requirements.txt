@@ -14,3 +14,5 @@ gunicorn
 flask-mail
 PyJWT
 Flask-SendGrid==0.5.3
+python-dotenv
+pytest
