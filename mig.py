@@ -1,7 +1,7 @@
 from extensions import db,migrate
 from flask_migrate import Migrate,MigrateCommand
 from flask_script import Manager
-from app import app
+from app_ import app
 from seeder import Seed
 #how to use
 

@@ -12,7 +12,7 @@ from functools import wraps
 #     return wrapper_function()
 
 
-# @app.before_request
+# @app_.before_request
 def login_required(f):
     @wraps(f)
     def authchack(*args, **kwargs):

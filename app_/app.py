@@ -29,9 +29,9 @@ cors.init_app(app)
 send_grid.init_app(app)
 #initial app_ function checks
 
-def creat_app(conf):
-    return app.run(conf)
-
+def creat_app():
+    return app.run()
+creat_app()
 print(app.config['DB_URL'])
 #app_ run
 if __name__=='__main__':
